@@ -1,4 +1,3 @@
-
 YALF is the abbreviation of "Yet Another Logger Facade".
 
 ## 特徴
@@ -115,7 +114,7 @@ YALFは各種ロギングライブラリの薄皮ラッパです。YALF経由で
 
 のように半角カンマ区切りで設定すると全てを読み込みます。
 
-**`META-INF/yalf.properies`の`log.message.basename`はモジュール毎に設定できます**。ロガーは全てのモジュール(jar)が持つ、`log.message.basename`の値をマージしてメッセージを取得します。
+**META-INF/yalf.properiesのlog.message.basenameはモジュール毎に設定できます**。ロガーは全てのモジュール(jar)が持つ、`log.message.basename`の値をマージしてメッセージを取得します。
 
 これにより、モジュール毎にログメッセージを管理することができます。
 
@@ -127,7 +126,7 @@ YALFは各種ロギングライブラリの薄皮ラッパです。YALF経由で
 
     log.id.format=[%-8s]
 
-のように設定すると、モジュール間で異なる長さのログIDを右寄せでそろえて出力できます。
+のように設定すると、モジュール間で異なる長さのログIDを左寄せで揃えて出力できます。
 
 この設定値はモジュール毎に管理することはできません。クラスローダの読み込み優先度が一番高い`yalf.properties`の値が反映されます。
 (通常、アプリ側の設定となります。)
