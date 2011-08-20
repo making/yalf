@@ -136,11 +136,8 @@ public class Logger {
         Logger.locale.set(locale);
     }
 
-    protected static ResourceBundle getResourceBundle(String basename) {
-        Locale locale = Logger.locale.get();
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
+    protected static ResourceBundle getResourceBundle(String basename,
+            Locale locale) {
         return ResourceBundle.getBundle(basename, locale);
     }
 
@@ -158,8 +155,12 @@ public class Logger {
 
     protected String getMessage(String logId) {
         String message = null;
+        Locale locale = Logger.locale.get();
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
         for (String basename : basenames) {
-            ResourceBundle bundle = getResourceBundle(basename);
+            ResourceBundle bundle = getResourceBundle(basename, locale);
             message = getStringOrNull(bundle, logId);
             if (message != null) {
                 break;
@@ -184,8 +185,7 @@ public class Logger {
             String body = MessageFormat.format(pattern, args);
             message.append(body);
         }
-        String msg = message.toString();
-        return msg;
+        return message.toString();
     }
 
     public static Logger getLogger(Class<?> clazz) {
@@ -381,6 +381,8 @@ public class Logger {
                 fatal(logId, args);
                 break;
             default:
+                debug(logId, args);
+                break;
             }
         }
     }
