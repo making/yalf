@@ -386,4 +386,33 @@ public class Logger {
             }
         }
     }
+
+    public void log(String logId, Throwable throwable, Object... args) {
+        if (logId != null && logId.length() > 0) {
+            char messageType = logId.charAt(0);
+            switch (messageType) {
+            case 'T':
+                trace(logId, throwable, args);
+                break;
+            case 'D':
+                debug(logId, throwable, args);
+                break;
+            case 'I':
+                info(logId, throwable, args);
+                break;
+            case 'W':
+                warn(logId, throwable, args);
+                break;
+            case 'E':
+                error(logId, throwable, args);
+                break;
+            case 'F':
+                fatal(logId, throwable, args);
+                break;
+            default:
+                debug(logId, throwable, args);
+                break;
+            }
+        }
+    }
 }
