@@ -14,31 +14,25 @@
  * limitations under the License.
  */
 
-package am.ik.yalf.exception;
+package am.ik.yalf.message;
 
 @SuppressWarnings("serial")
-public class CommonException extends Exception {
-    private final String errorId;
-    private final Object[] args;
+public class MessageRuntimeException extends RuntimeException {
 
-    public CommonException(String errorId, Throwable e, Object... args) {
-        super(ExceptionConfig.getMessage(errorId, args), e);
-        this.errorId = errorId;
-        this.args = args;
+    public MessageRuntimeException() {
+        super();
     }
 
-    public CommonException(String errorId, Object... args) {
-        super(ExceptionConfig.getMessage(errorId, args));
-        this.errorId = errorId;
-        this.args = args;
+    public MessageRuntimeException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
     }
 
-    public String getErrorId() {
-        return errorId;
+    public MessageRuntimeException(String arg0) {
+        super(arg0);
     }
 
-    public Object[] getArgs() {
-        return args;
+    public MessageRuntimeException(Throwable arg0) {
+        super(arg0);
     }
 
 }
