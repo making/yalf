@@ -25,6 +25,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import am.ik.yalf.message.MessageManager;
+
 public class LoggerTest {
 
     @Before
@@ -63,9 +65,9 @@ public class LoggerTest {
     public void testCreateMessage02() throws Exception {
         Logger logger = Logger.getLogger(Logger.class);
         Logger.setLocale(Locale.ENGLISH);
-        Field f = Logger.class.getDeclaredField("logIdFormat");
+        Field f = MessageManager.class.getDeclaredField("messageIdFormat");
         f.setAccessible(true);
-        String logIdFormat = (String) f.get(Logger.class);
+        String logIdFormat = (String) f.get(Logger.MESSAGE_MANAGER);
         String logId = String.format(logIdFormat, "ERR001");
         assertEquals(logId + "error1", logger.createMessage(true, "ERR001"));
         Logger.setLocale(Locale.getDefault());

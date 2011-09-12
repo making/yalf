@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>am.ik.yalf</groupId>
     <artifactId>yalf-parent</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1</version>
     <description>Yet Anather Logger Facade</description>
     <packaging>pom</packaging>
 
@@ -52,7 +52,7 @@
         <encoding>Windows-31J</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <jdk.version>1.5</jdk.version>
-        <yalf.version>0.9.0</yalf.version>
+        <yalf.version>0.9.1</yalf.version>
         <commons.logging.version>1.1.1</commons.logging.version>
         <log4j.version>1.2.16</log4j.version>
         <org.slf4j.version>1.6.1</org.slf4j.version>

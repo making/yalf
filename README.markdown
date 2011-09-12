@@ -104,27 +104,27 @@ YALFは各種ロギングライブラリの薄皮ラッパです。YALF経由で
 クラスパス直下の`META-INF`ディレクトリに`yalf.properties`を作成してください。
 
 ### メッセージプロパティファイルのベースネーム設定
-`yalf.properties`の`log.message.basename`キーにメッセージプロパティファイルのベースネームをクラスパス相対(FQCN)で設定してください。`java.util.ResourceBundle`で読み込むので、国際化に対応しています。
+`yalf.properties`の`message.basename`キーにメッセージプロパティファイルのベースネームをクラスパス相対(FQCN)で設定してください。`java.util.ResourceBundle`で読み込むので、国際化に対応しています。
 
-    log.message.basename=hoge
+    message.basename=hoge
 
 と書くとクラスパス直下の`hoge.properties`が読み込まれます。
 
-    log.message.basename=hoge,foo,bar
+    message.basename=hoge,foo,bar
 
 のように半角カンマ区切りで設定すると全てを読み込みます。
 
-**META-INF/yalf.properiesのlog.message.basenameはモジュール毎に設定できます**。ロガーは全てのモジュール(jar)が持つ、`log.message.basename`の値をマージしてメッセージを取得します。
+**META-INF/yalf.properiesのmessage.basenameはモジュール毎に設定できます**。ロガーは全てのモジュール(jar)が持つ、`message.basename`の値をマージしてメッセージを取得します。
 
 これにより、モジュール毎にログメッセージを管理することができます。
 
 ### 出力ログIDフォーマット設定
 
-ログ出力時に自動で付加されるログIDのフォーマットを設定できます。`log.id.format`キーに`java.lang.String.format()`のフォーマット形式で設定してください。ログIDが文字列として渡されます。
+ログ出力時に自動で付加されるログIDのフォーマットを設定できます。`message.id.format`キーに`java.lang.String.format()`のフォーマット形式で設定してください。ログIDが文字列として渡されます。
 
 設定しない場合は「`[%s]`」がデフォルト値として使用されます。
 
-    log.id.format=[%-8s]
+    message.id.format=[%-8s]
 
 のように設定すると、モジュール間で異なる長さのログIDを左寄せで揃えて出力できます。
 
@@ -170,7 +170,7 @@ And add dependency.
         <dependency>
             <groupId>am.ik.yalf</groupId>
             <artifactId>yalf</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- Choose one adapter from the below -->
@@ -179,28 +179,28 @@ And add dependency.
         <dependency>
             <groupId>am.ik.yalf</groupId>
             <artifactId>yalf-jul</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- YALF Adapter for Commons Logging -->
         <dependency>
             <groupId>am.ik.yalf</groupId>
             <artifactId>yalf-jcl</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- YALF Adapter for SLF4J -->
         <dependency>
             <groupId>am.ik.yalf</groupId>
             <artifactId>yalf-slf4j</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- YALF Adapter for Log4j -->
         <dependency>
             <groupId>am.ik.yalf</groupId>
             <artifactId>yalf-log4j</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>
 

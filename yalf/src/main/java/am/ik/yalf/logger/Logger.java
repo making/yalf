@@ -16,37 +16,22 @@
 
 package am.ik.yalf.logger;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import am.ik.yalf.logger.impl.JulLoggerAdapter;
 import am.ik.yalf.logger.impl.LoggerAdapterImpl;
+import am.ik.yalf.message.MessageManager;
 
 public class Logger {
     private final LoggerAdapter adapter = createAdapter();
     private final Object logger;
-    private static String logIdFormat = "[%s] ";
     private static final String CONFIG_FILENAME = "META-INF/yalf.properties";
-    private static final String LOG_ID_FORMAT_KEY = "log.id.format";
-    private static final String LOG_MESSAGE_BASENAME_KEY = "log.message.basename";
-    private static final List<String> basenames = new CopyOnWriteArrayList<String>();
     private static final ThreadLocal<Locale> locale = new ThreadLocal<Locale>();
     private static final AtomicBoolean adapterImplNotFound = new AtomicBoolean(
             false);
-
-    static {
-        initialize();
-    }
+    protected static final MessageManager MESSAGE_MANAGER = new MessageManager(
+            CONFIG_FILENAME);
 
     private LoggerAdapter createAdapter() {
         if (adapterImplNotFound.get()) {
@@ -68,62 +53,6 @@ public class Logger {
         }
     }
 
-    private synchronized static void initialize() {
-        initFromConfig();
-        initFromAllConfigs();
-    }
-
-    private static synchronized void initFromConfig() {
-        try {
-            ClassLoader cl = getClassLoader();
-            String format = null;
-            InputStream strm = cl.getResourceAsStream(CONFIG_FILENAME);
-            if (strm != null) {
-                Properties p = new Properties();
-                p.load(strm);
-                format = p.getProperty(LOG_ID_FORMAT_KEY);
-            }
-            if (format != null) {
-                logIdFormat = format;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static synchronized void initFromAllConfigs() {
-        try {
-            ClassLoader cl = getClassLoader();
-            Enumeration<URL> urls = cl.getResources(CONFIG_FILENAME);
-            while (urls.hasMoreElements()) {
-                URL url = urls.nextElement();
-                Properties p = new Properties();
-                InputStream strm = url.openStream();
-                p.load(strm);
-                if (p.containsKey(LOG_MESSAGE_BASENAME_KEY)) {
-                    String[] basenameArray = p.getProperty(
-                            LOG_MESSAGE_BASENAME_KEY).split(",");
-                    for (String s : basenameArray) {
-                        String basename = s.trim();
-                        if (!"".equals(basename)) {
-                            basenames.add(basename);
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static ClassLoader getClassLoader() {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        if (cl == null) {
-            cl = Logger.class.getClassLoader();
-        }
-        return cl;
-    }
-
     protected Logger(Class<?> clazz) {
         logger = adapter.getLogger(clazz);
     }
@@ -136,56 +65,10 @@ public class Logger {
         Logger.locale.set(locale);
     }
 
-    protected static ResourceBundle getResourceBundle(String basename,
-            Locale locale) {
-        return ResourceBundle.getBundle(basename, locale);
-    }
-
-    private String getStringOrNull(ResourceBundle bundle, String key) {
-        if (bundle == null) {
-            return null;
-        }
-
-        try {
-            return bundle.getString(key);
-        } catch (MissingResourceException ignore) {
-            return null;
-        }
-    }
-
-    protected String getMessage(String logId) {
-        String message = null;
-        Locale locale = Logger.locale.get();
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-        for (String basename : basenames) {
-            ResourceBundle bundle = getResourceBundle(basename, locale);
-            message = getStringOrNull(bundle, logId);
-            if (message != null) {
-                break;
-            }
-        }
-        return message;
-    }
-
     protected String createMessage(boolean resource, String logIdOrPattern,
             Object... args) {
-        String pattern = null;
-        StringBuilder message = new StringBuilder();
-
-        if (resource) {
-            pattern = getMessage(logIdOrPattern);
-            message.append(String.format(logIdFormat, logIdOrPattern));
-        } else {
-            pattern = logIdOrPattern;
-        }
-
-        if (pattern != null) {
-            String body = MessageFormat.format(pattern, args);
-            message.append(body);
-        }
-        return message.toString();
+        return MESSAGE_MANAGER.getMessage(resource, logIdOrPattern,
+                locale.get(), args);
     }
 
     public static Logger getLogger(Class<?> clazz) {
